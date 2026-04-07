@@ -1,7 +1,7 @@
-from celery.result import AsyncResult
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+from celery_app import celery
 from tasks import add, send_email
 import uvicorn
 
@@ -45,7 +45,7 @@ def get_task_status(task_id: str):
 
     Possible states: PENDING → STARTED → SUCCESS | FAILURE | RETRY
     """
-    result = AsyncResult(task_id)
+    result = celery.AsyncResult(task_id)
     response = {
         "task_id": task_id,
         "status": result.status,
